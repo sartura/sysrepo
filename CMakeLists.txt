@@ -103,7 +103,7 @@ option(ENABLE_PYTHON_TESTS "Enable Python tests." ON)
 
 # compilation flags
 set(CMAKE_C_FLAGS         "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_COVERAGE} -Wall -Wextra -Wpedantic -std=c99")
-set(CMAKE_C_FLAGS_RELEASE "-DNDEBUG -O2")
+set(CMAKE_C_FLAGS_RELEASE "-DNDEBUG -O2 -fstack-protector-strong --param=ssp-buffer-size=4 -fdata-sections -ffunction-sections -DFORTIFY_SOURCE=2")
 set(CMAKE_C_FLAGS_PACKAGE "-g -O2 -DNDEBUG")
 set(CMAKE_C_FLAGS_DEBUG   "-g -O0")
 
@@ -225,6 +225,9 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 target_link_libraries(sysrepo ${CMAKE_THREAD_LIBS_INIT})
 set(CMAKE_REQUIRED_LIBRARIES pthread)
+
+# gc-sections
+target_link_libraries(sysrepo -Wl,--gc-sections)
 
 # required functions
 set(CMAKE_REQUIRED_DEFINITIONS "-D_GNU_SOURCE;-D_DEFAULT_SOURCE")
